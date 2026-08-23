@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         startStopButton = findViewById(R.id.btn_start_stop)
         statusText = findViewById(R.id.status_text)
 
-        slider.value = prefs.getFloat(PREF_DELAY_SEC, 3.0f).coerceIn(0.5f, 20.0f)
+        slider.value = prefs.getFloat(PREF_DELAY_SEC, 3.0f).coerceIn(0.5f, 30.0f)
         outputSpinner.setSelection(
             prefs.getInt(PREF_OUTPUT_INDEX, 0).coerceIn(0, OUTPUT_USAGES.lastIndex)
         )
@@ -166,7 +166,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun nudgeDelay(deltaSec: Float) {
-        val newValue = (round((slider.value + deltaSec) * 10f) / 10f).coerceIn(0.5f, 20.0f)
+        val newValue = (round((slider.value + deltaSec) * 10f) / 10f).coerceIn(0.5f, 30.0f)
         slider.value = newValue
         sendDelayToService()
     }

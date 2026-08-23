@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:valueFrom="0.5"
-            android:valueTo="20"
+            android:valueTo="30"
             android:value="3" />
 
         <LinearLayout

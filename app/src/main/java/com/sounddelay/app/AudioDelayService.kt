@@ -100,7 +100,7 @@ class AudioDelayService : Service() {
             proj.registerCallback(projectionCallback, mainHandler)
             projection = proj
 
-            engine = DelayEngine(proj, outputUsage, delayMs) {
+            engine = DelayEngine(this, proj, outputUsage, delayMs) {
                 mainHandler.post { stopEverything(getString(R.string.error_capture_stopped)) }
             }.also { it.start() }
 

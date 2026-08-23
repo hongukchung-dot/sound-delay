@@ -4,7 +4,7 @@
 
     <string name="instructions">TV 화면과 스마트폰 소리의 싱크를 맞추기 위해, 폰에서 재생 중인 오디오를 설정한 시간만큼 늦게 다시 들려줍니다.\n\n1. 블루투스 이어폰을 연결하세요.\n2. 지연 시간을 설정하고 시작을 누르세요.\n3. 화면 캡처 허용 창이 뜨면 허용하세요. 소리만 사용하며 화면은 녹화·저장하지 않습니다.\n4. 미디어 볼륨을 0으로 낮춰 원본 소리를 끄세요. 지연된 소리의 크기는 알람 볼륨으로 조절합니다.\n\n※ 넷플릭스 등 오디오 캡처를 차단하는 앱은 지원되지 않습니다. (유튜브는 가능)</string>
 
-    <string name="delay_label">지연 시간 (0.5초 ~ 20초)</string>
+    <string name="delay_label">지연 시간 (0.5초 ~ 30초)</string>
     <string name="delay_value_format">%.1f초</string>
     <string name="minus_01">−0.1초</string>
     <string name="plus_01">+0.1초</string>

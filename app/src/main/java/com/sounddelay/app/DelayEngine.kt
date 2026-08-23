@@ -1,8 +1,12 @@
 package com.sounddelay.app
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioDeviceCallback
+import android.media.AudioDeviceInfo
 import android.media.AudioFormat
+import android.media.AudioManager
 import android.media.AudioPlaybackCaptureConfiguration
 import android.media.AudioRecord
 import android.media.AudioTrack
@@ -17,6 +21,7 @@ import kotlin.math.max
  * 무한 에코가 생기는 것을 막는다.
  */
 class DelayEngine(
+    context: Context,
     private val mediaProjection: MediaProjection,
     private val outputUsage: Int,
     initialDelayMs: Long,
@@ -25,7 +30,17 @@ class DelayEngine(
     companion object {
         const val SAMPLE_RATE = 48_000
         const val CHANNELS = 2
-        const val MAX_DELAY_MS = 20_000L
+        const val MAX_DELAY_MS = 30_000L
+
+        // 지연음을 우선 내보낼 출력 기기 순서. 없으면 시스템 기본 라우팅.
+        private val PREFERRED_DEVICE_TYPES = intArrayOf(
+            AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
+            AudioDeviceInfo.TYPE_BLE_HEADSET,
+            AudioDeviceInfo.TYPE_HEARING_AID,
+            AudioDeviceInfo.TYPE_USB_HEADSET,
+            AudioDeviceInfo.TYPE_WIRED_HEADSET,
+            AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+        )
         private const val CHUNK_FRAMES = 960 // 20ms
         private const val CHUNK_SAMPLES = CHUNK_FRAMES * CHANNELS
         private const val RING_SAMPLES =
@@ -38,12 +53,39 @@ class DelayEngine(
     @Volatile
     private var running = false
 
+    private val audioManager: AudioManager =
+        context.getSystemService(AudioManager::class.java)
+
     private var record: AudioRecord? = null
     private var track: AudioTrack? = null
     private var thread: Thread? = null
 
+    // 이어폰 연결/해제 시 지연음 출력 기기를 다시 지정한다.
+    private val deviceCallback = object : AudioDeviceCallback() {
+        override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>) {
+            applyPreferredDevice()
+        }
+
+        override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>) {
+            applyPreferredDevice()
+        }
+    }
+
     fun setDelayMs(ms: Long) {
         delayMs = ms.coerceIn(0L, MAX_DELAY_MS)
+    }
+
+    /**
+     * 알람 채널을 스피커로 강제하는 기기가 있어, 이어폰(블루투스/유선)이
+     * 연결되어 있으면 지연음 트랙의 출력 기기를 명시적으로 지정한다.
+     */
+    private fun applyPreferredDevice() {
+        val t = track ?: return
+        val devices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
+        val target = PREFERRED_DEVICE_TYPES.firstNotNullOfOrNull { type ->
+            devices.firstOrNull { it.type == type }
+        }
+        t.preferredDevice = target
     }
 
     @SuppressLint("MissingPermission")
@@ -100,6 +142,8 @@ class DelayEngine(
 
         record = rec
         track = out
+        applyPreferredDevice()
+        audioManager.registerAudioDeviceCallback(deviceCallback, null)
         running = true
         thread = Thread(::loop, "DelayEngine").also {
             it.priority = Thread.MAX_PRIORITY
@@ -109,6 +153,7 @@ class DelayEngine(
 
     fun stop() {
         running = false
+        runCatching { audioManager.unregisterAudioDeviceCallback(deviceCallback) }
         thread?.join(1_000)
         thread = null
     }
