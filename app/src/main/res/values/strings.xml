@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">사운드 딜레이</string>
 
-    <string name="instructions">TV 화면과 스마트폰 소리의 싱크를 맞추기 위해, 폰에서 재생 중인 오디오를 설정한 시간만큼 늦게 다시 들려줍니다.\n\n1. 블루투스 이어폰을 연결하세요.\n2. 지연 시간을 설정하고 시작을 누르세요.\n3. 화면 캡처 허용 창이 뜨면 허용하세요. 소리만 사용하며 화면은 녹화·저장하지 않습니다.\n4. 미디어 볼륨을 0으로 낮춰 원본 소리를 끄세요. 지연된 소리의 크기는 알람 볼륨으로 조절합니다.\n\n※ 넷플릭스 등 오디오 캡처를 차단하는 앱은 지원되지 않습니다. (유튜브는 가능)</string>
+    <string name="instructions">TV 화면과 스마트폰 소리의 싱크를 맞추기 위해, 폰에서 재생 중인 오디오를 설정한 시간만큼 늦게 다시 들려줍니다.\n\n1. 블루투스 이어폰을 연결하세요.\n2. 지연 시간을 설정하고 시작을 누르세요.\n3. 화면 캡처 허용 창이 뜨면 허용하세요. 소리만 사용하며 화면은 녹화·저장하지 않습니다.\n4. 시작하면 원본 소리(미디어 볼륨)는 자동으로 음소거되고, 정지하면 원래대로 복원됩니다.\n5. 지연된 소리의 크기는 아래 지연음 볼륨 슬라이더로 조절하세요.\n\n※ 기기의 볼륨 버튼을 누르면 미디어 볼륨이 다시 올라가 원본이 들릴 수 있습니다. 소리 크기는 꼭 앱 안의 슬라이더로 조절하세요.\n※ 넷플릭스 등 오디오 캡처를 차단하는 앱은 지원되지 않습니다. (유튜브는 가능)</string>
 
     <string name="delay_label">지연 시간 (0.5초 ~ 30초)</string>
     <string name="delay_value_format">%.1f초</string>
@@ -10,7 +10,9 @@
     <string name="plus_01">+0.1초</string>
 
     <string name="output_label">출력 볼륨 채널</string>
-    <string name="output_hint">지연된 소리를 내보낼 볼륨 채널입니다. 원본(미디어 볼륨)을 0으로 두어도 들리도록 기본값은 알람 볼륨입니다. 기기에 따라 알람이 스피커로도 울리면 다른 채널로 바꿔 보세요.</string>
+    <string name="output_hint">지연된 소리를 내보낼 볼륨 채널입니다. 원본(미디어 볼륨)이 음소거돼도 들리도록 기본값은 알람 볼륨입니다. 문제가 있을 때만 바꿔 보세요.</string>
+    <string name="volume_label">지연음 볼륨</string>
+    <string name="volume_hint">지연된 소리의 크기입니다. 기기 볼륨 버튼 대신 이 슬라이더를 사용하세요.</string>
     <string-array name="output_options">
         <item>알람 볼륨 (권장)</item>
         <item>미디어 볼륨</item>
@@ -21,7 +23,7 @@
     <string name="stop">정지</string>
     <string name="status_idle">대기 중</string>
     <string name="status_starting">시작하는 중…</string>
-    <string name="status_running">딜레이 재생 중 — 미디어 볼륨을 0으로 낮추세요</string>
+    <string name="status_running">딜레이 재생 중 — 원본(미디어 볼륨)은 자동 음소거됨</string>
     <string name="status_error">오류: %s</string>
 
     <string name="error_record_permission">오디오 캡처를 위해 마이크 권한이 필요합니다</string>

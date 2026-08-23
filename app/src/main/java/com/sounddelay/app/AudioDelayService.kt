@@ -8,6 +8,7 @@ import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Build
@@ -46,6 +47,24 @@ class AudioDelayService : Service() {
     private val mainHandler = Handler(Looper.getMainLooper())
     private var projection: MediaProjection? = null
     private var engine: DelayEngine? = null
+
+    // 시작할 때 자동으로 음소거한 미디어 볼륨. 정지할 때 복원한다. -1이면 저장된 값 없음.
+    private var savedMediaVolume = -1
+
+    private fun muteMediaVolume() {
+        val am = getSystemService(AudioManager::class.java)
+        runCatching {
+            savedMediaVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC)
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0)
+        }
+    }
+
+    private fun restoreMediaVolume() {
+        if (savedMediaVolume < 0) return
+        val am = getSystemService(AudioManager::class.java)
+        runCatching { am.setStreamVolume(AudioManager.STREAM_MUSIC, savedMediaVolume, 0) }
+        savedMediaVolume = -1
+    }
 
     private val projectionCallback = object : MediaProjection.Callback() {
         override fun onStop() {
@@ -104,6 +123,9 @@ class AudioDelayService : Service() {
                 mainHandler.post { stopEverything(getString(R.string.error_capture_stopped)) }
             }.also { it.start() }
 
+            // 원본 소리 소거. 미디어 볼륨 채널로 출력할 때는 지연음까지 꺼지므로 건너뛴다.
+            if (outputUsage != AudioAttributes.USAGE_MEDIA) muteMediaVolume()
+
             isRunning = true
             broadcastState(null)
         } catch (e: Exception) {
@@ -112,6 +134,7 @@ class AudioDelayService : Service() {
     }
 
     private fun stopEverything(error: String?) {
+        restoreMediaVolume()
         engine?.stop()
         engine = null
         projection?.let {
@@ -166,6 +189,7 @@ class AudioDelayService : Service() {
     }
 
     override fun onDestroy() {
+        restoreMediaVolume()
         engine?.stop()
         engine = null
         projection?.let {

@@ -7,9 +7,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var slider: Slider
     private lateinit var delayValueText: TextView
     private lateinit var outputSpinner: Spinner
+    private lateinit var volumeSlider: Slider
     private lateinit var startStopButton: Button
     private lateinit var statusText: TextView
 
@@ -41,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private val projectionManager by lazy {
         getSystemService(MediaProjectionManager::class.java)
     }
+    private val audioManager by lazy { getSystemService(AudioManager::class.java) }
 
     private val stateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -74,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         slider = findViewById(R.id.delay_slider)
         delayValueText = findViewById(R.id.delay_value)
         outputSpinner = findViewById(R.id.output_spinner)
+        volumeSlider = findViewById(R.id.volume_slider)
         startStopButton = findViewById(R.id.btn_start_stop)
         statusText = findViewById(R.id.status_text)
 
@@ -81,6 +87,24 @@ class MainActivity : AppCompatActivity() {
         outputSpinner.setSelection(
             prefs.getInt(PREF_OUTPUT_INDEX, 0).coerceIn(0, OUTPUT_USAGES.lastIndex)
         )
+
+        setupVolumeSlider()
+        volumeSlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                runCatching {
+                    audioManager.setStreamVolume(currentOutputStream(), value.toInt(), 0)
+                }
+            }
+        }
+        outputSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                setupVolumeSlider()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         slider.addOnChangeListener { _, _, _ -> updateDelayLabel() }
         slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
@@ -108,6 +132,7 @@ class MainActivity : AppCompatActivity() {
             IntentFilter(AudioDelayService.ACTION_STATE_CHANGED),
             ContextCompat.RECEIVER_NOT_EXPORTED
         )
+        setupVolumeSlider()
         updateUi(null)
     }
 
@@ -181,6 +206,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun currentDelayMs(): Long = (slider.value * 1_000f).toLong()
+
+    private fun currentOutputStream(): Int {
+        val usageIndex = outputSpinner.selectedItemPosition.coerceIn(0, OUTPUT_USAGES.lastIndex)
+        return when (OUTPUT_USAGES[usageIndex]) {
+            AudioAttributes.USAGE_MEDIA -> AudioManager.STREAM_MUSIC
+            AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY -> AudioManager.STREAM_ACCESSIBILITY
+            else -> AudioManager.STREAM_ALARM
+        }
+    }
+
+    private fun setupVolumeSlider() {
+        val stream = currentOutputStream()
+        val min = audioManager.getStreamMinVolume(stream)
+        val max = audioManager.getStreamMaxVolume(stream)
+        if (max <= min) return
+        volumeSlider.valueFrom = min.toFloat()
+        volumeSlider.valueTo = max.toFloat()
+        volumeSlider.stepSize = 1f
+        volumeSlider.value = audioManager.getStreamVolume(stream).coerceIn(min, max).toFloat()
+    }
 
     private fun updateDelayLabel() {
         delayValueText.text = getString(R.string.delay_value_format, slider.value)
