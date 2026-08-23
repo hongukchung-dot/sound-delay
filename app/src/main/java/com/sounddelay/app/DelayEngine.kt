@@ -82,8 +82,10 @@ class DelayEngine(
     private fun applyPreferredDevice() {
         val t = track ?: return
         val devices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
-        val target = PREFERRED_DEVICE_TYPES.firstNotNullOfOrNull { type ->
-            devices.firstOrNull { it.type == type }
+        var target: AudioDeviceInfo? = null
+        for (type in PREFERRED_DEVICE_TYPES) {
+            target = devices.firstOrNull { it.type == type }
+            if (target != null) break
         }
         t.preferredDevice = target
     }
