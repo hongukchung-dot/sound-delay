@@ -30,7 +30,7 @@ class DelayEngine(
     companion object {
         const val SAMPLE_RATE = 48_000
         const val CHANNELS = 2
-        const val MAX_DELAY_MS = 50_000L
+        const val MAX_DELAY_MS = 60_000L
 
         // 지연음을 우선 내보낼 출력 기기 순서. 없으면 시스템 기본 라우팅.
         private val PREFERRED_DEVICE_TYPES = intArrayOf(

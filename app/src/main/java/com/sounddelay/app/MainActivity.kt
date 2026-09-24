@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         private const val PREF_DELAY_SEC = "delay_sec"
         private const val PREF_OUTPUT_INDEX = "output_index"
         private const val MIN_DELAY_SEC = 0.5f
-        private const val MAX_DELAY_SEC = 50.0f
+        private const val MAX_DELAY_SEC = 60.0f
     }
 
     private lateinit var slider: Slider
