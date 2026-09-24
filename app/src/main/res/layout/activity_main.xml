@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:valueFrom="0.5"
-            android:valueTo="30"
+            android:valueTo="50"
             android:value="3" />
 
         <LinearLayout
@@ -65,6 +65,45 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="@string/plus_01" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/measure_label"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/measure_hint"
+            android:textSize="12sp"
+            android:alpha="0.7" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_measure"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="@string/measure_a" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_measure_cancel"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/measure_cancel"
+                android:visibility="gone" />
         </LinearLayout>
 
         <TextView

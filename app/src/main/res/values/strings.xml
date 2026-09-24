@@ -4,10 +4,18 @@
 
     <string name="instructions">TV 화면과 스마트폰 소리의 싱크를 맞추기 위해, 폰에서 재생 중인 오디오를 설정한 시간만큼 늦게 다시 들려줍니다.\n\n[최초 1회] 개발자 옵션에서 \"절대 볼륨 사용 안 함\"을 켜고 이어폰을 재연결하세요. 켜지 않으면 원본 음소거 시 지연음까지 무음이 됩니다.\n\n1. 블루투스 이어폰을 연결하세요.\n2. 지연 시간을 설정하고 시작을 누르세요.\n3. 화면 캡처 허용 창이 뜨면 허용하세요. 소리만 사용하며 화면은 녹화·저장하지 않습니다.\n4. 시작하면 원본 소리(미디어 볼륨)는 자동으로 음소거되고, 정지하면 원래대로 복원됩니다.\n5. 지연된 소리의 크기는 아래 지연음 볼륨 슬라이더로 조절하세요.\n\n※ 기기의 볼륨 버튼을 누르면 미디어 볼륨이 다시 올라가 원본이 들릴 수 있습니다. 소리 크기는 꼭 앱 안의 슬라이더로 조절하세요.\n※ 넷플릭스 등 오디오 캡처를 차단하는 앱은 지원되지 않습니다. (유튜브는 가능)</string>
 
-    <string name="delay_label">지연 시간 (0.5초 ~ 30초)</string>
+    <string name="delay_label">지연 시간 (0.5초 ~ 50초)</string>
     <string name="delay_value_format">%.1f초</string>
     <string name="minus_01">−0.1초</string>
     <string name="plus_01">+0.1초</string>
+
+    <string name="measure_label">딜레이 측정 (스톱워치)</string>
+    <string name="measure_hint">폰 화면(또는 폰 소리)에서 특정 장면이 나오는 순간 A를 누르고, TV 화면에 같은 장면이 나오는 순간 B를 누르세요. 두 시점의 차이가 지연 시간으로 바로 적용되며, 재생 중이면 B를 누른 순간부터 A 시점의 소리가 들립니다.</string>
+    <string name="measure_a">A 시점 표시</string>
+    <string name="measure_b_format">B 시점 표시 (%.1f초 경과)</string>
+    <string name="measure_cancel">취소</string>
+    <string name="measure_applied_format">측정된 지연 %.1f초를 적용했습니다</string>
+    <string name="measure_clamped_format">측정값 %1$.1f초가 최대치를 넘어 %2$.0f초로 적용했습니다</string>
 
     <string name="output_label">출력 볼륨 채널</string>
     <string name="output_hint">지연된 소리를 내보낼 볼륨 채널입니다. 원본(미디어 볼륨)이 음소거돼도 들리도록 기본값은 알람 볼륨입니다. 문제가 있을 때만 바꿔 보세요.</string>
